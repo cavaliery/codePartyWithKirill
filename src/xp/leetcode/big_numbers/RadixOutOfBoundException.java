@@ -1,12 +1,12 @@
 package xp.leetcode.big_numbers;
 
 /**
- * Thrown to indicate not correct radix for calculation of BigNumbers
+ * Thrown to indicate not correct radix for calculation of BigNumbers.
  */
-public class RadixOutOfBoundException extends RuntimeException {
+public class RadixOutOfBoundException extends IllegalArgumentException {
 
     /**
-     * Constructs with message
+     * Constructs with message.
      *
      * @param radix the illegal radix.
      */

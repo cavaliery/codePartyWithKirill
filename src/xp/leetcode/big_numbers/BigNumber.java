@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class represents number that can be long and allows to make calculation.
+ * Represents a number that can be long and allows to make calculation.
  */
 public class BigNumber {
 
-    public static final short RADIX_128 = Byte.MAX_VALUE + 1;
+    public static final short MAX_BYTE_RADIX = Byte.MAX_VALUE + 1;
 
     /**
      * List of digits of number in specific-numeral system,
@@ -26,16 +26,16 @@ public class BigNumber {
     /**
      * Represent base in array for inner calculation.
      */
-    private final List<Byte> array_radix;
+    private final List<Byte> arrayRadix;
 
     /**
-     * Inner constructor for creation BigNumber
+     * Inner constructor for creation BigNumber.
      *
      * @param base base of numerical system. Can be from 2 to 128.
      * @param nums – list of digits in radix-numeral system
      */
     private BigNumber(short base, List<Byte> nums) throws RadixOutOfBoundException {
-        if (base < 2 || base > RADIX_128) {
+        if (base < 2 || base > MAX_BYTE_RADIX) {
             throw new RadixOutOfBoundException(base);
         }
         this.base = base;
@@ -44,12 +44,12 @@ public class BigNumber {
         array_radix.add((byte) 8);
         array_radix.add((byte) 2);
         array_radix.add((byte) 1);
-        this.array_radix = array_radix;
+        this.arrayRadix = array_radix;
     }
 
 
     /**
-     * Constructor for creation BigNumber from the String with the digits in 10-numeral system
+     * Constructor for creation BigNumber from the String with the digits in 10-numeral system.
      *
      * @param base base of numerical system. Can be from 2 to 128.
      * @param line – decimal number
@@ -59,7 +59,7 @@ public class BigNumber {
     }
 
     /**
-     * Constructor for creation BigNumber from the decimal number
+     * Constructor for creation BigNumber from the decimal number.
      *
      * @param base    base of numerical system. Can be from 2 to 128.
      * @param aNumber – decimal number
@@ -69,43 +69,42 @@ public class BigNumber {
     }
 
     /**
-     * Constructor for creation BigNumber from the input stream
+     * Creates BigNumber from the input stream.
      *
      * @param base  base of numerical system. Can be from 2 to 128.
      * @param input – input
      */
-    public BigNumber(short base, InputStream input) throws IOException {
-        this(base, BigNumberUtil.getNumberList(base, input));
+    public static BigNumber createBigNumber(short base, InputStream input) throws IOException {
+        return new BigNumber(base, BigNumberUtil.getNumberFromInput(base, input));
     }
 
-
     /**
-     * Add to this number another number
+     * Add to this number another number.
      *
      * @param num the second number of summarize
      * @return new BigNumber as a result of sum up
      */
     public BigNumber add(BigNumber num) {
-        return new BigNumber(base, BigNumberUtil.sum2ListRadix(base, this.nums, num.nums));
+        return new BigNumber(base, BigNumberUtil.sum(base, this.nums, num.nums));
     }
 
     /**
-     * Add to this number another number
+     * Add to this number another number.
      *
      * @param num the second number of summarize
      * @return new BigNumber as a result of sum up
      */
     public BigNumber multiply(BigNumber num) {
-        return new BigNumber(base, BigNumberUtil.multiplyRadix(base, this.nums, num.nums));
+        return new BigNumber(base, BigNumberUtil.multiply(base, this.nums, num.nums));
     }
 
     /**
-     * Return the line represented the decimal number from BigNumber
+     * Return the line represented the decimal number from BigNumber.
      *
      * @return the decimal number as a line
      */
-    public String getNumber() {
-        List<Byte> numberList10 = BigNumberUtil.getNumberList10FromListOnBase(nums, array_radix);
+    public String toDecimalString() {
+        List<Byte> numberList10 = BigNumberUtil.getDecimalNumber(arrayRadix, nums);
         StringBuilder sb = new StringBuilder();
         for (int i = numberList10.size() - 1; i >= 0; i--) {
             sb.append(numberList10.get(i));
